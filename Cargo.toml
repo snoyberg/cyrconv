@@ -1,0 +1,6 @@
+[package]
+name = "cyrconv"
+version = "0.1.0"
+authors = ["aspera-non-spernit <g.s.d>"]
+
+[dependencies]
