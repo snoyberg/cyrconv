@@ -1,36 +1,59 @@
 use std::env::args;
 use std::fs::{File};
 use std::io::{Read};
+use std::io::BufReader;
+use std::io::BufRead;
 
-pub fn load(path: &str) -> Result<String, &str> {
-    println!("Attempting to load page: {:?}", path);
+pub fn load_table(path: &str) -> Result<(String, String), &str> {
     let mut buf = String::new();
+    let mut res: (String, String) = (String::new(), String::new());
+
     match File::open(&path) {
         Ok(mut file) => { 
-            file.read_to_string(&mut buf).unwrap();
-            Ok(buf)
+            let reader = BufReader::new(&file);
+            let mut lines = reader.lines();
+            Ok ( ( lines.next().unwrap().unwrap(), lines.next().unwrap().unwrap() ) )
         }, 
         Err(_e) =>{ Err("load error. file not found.") }
     }
 }
 
-fn main() {
-    let args: Vec<String> = std::env::args().collect();
+fn conv<'a>(input: &str, tt: (String, String) ) -> &'a str {
+    "dd"
+}
+
+fn input(start: usize, words: &Vec<String>) -> String {
     let mut input: String = String::new();
-    for (i, arg) in args.iter().enumerate() {
-        if i > 0 {
-            input.push_str(&args[i]);
+    for (i, arg) in words.iter().enumerate() {
+        if i > start {
+            input.push_str(&words[i]);
             input.push(' ');
         }
     }
+    input
+}
 
-    let latin: &str =  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_";
-    let cyrill: &str = "АВСDЕҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdеfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_";
-    let cvec: Vec<_> = cyrill.chars().collect();
+
+fn main() {
+    let args: Vec<String> = std::env::args().collect();
+    let mut start = 0;
+    
+    let table = if args[1].eq("flex") {
+        start = 2;
+        load_table(&args[2])
+    } else {
+        Ok (( 
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_'".to_string(),
+            "АВСDЕҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdеfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_'".to_string()
+        ))
+    }.unwrap();
+    let input = input(start, &args);
+
+    let tvec: Vec<_> = table.1.chars().collect();
     let mut output: String = String::new();
     for c in input.chars() {
-        for (i, cl) in latin.chars().enumerate() {
-             if c.eq(&cl) { output.push(cvec[i]); }
+        for (i, cl) in table.0.chars().enumerate() {
+             if c.eq(&cl) { output.push(tvec[i]); }
              else { }
         }
     }
