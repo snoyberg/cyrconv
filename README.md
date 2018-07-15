@@ -13,19 +13,23 @@
 
 > cyrconv sentence
 
+Example:
+
 ```bash
-    $ cyrconv When the seagulls follow the trawler, it is because they think sardines will be thrown into the sea
-    Шнеп тне ѕеаgцllѕ fоllош тне тгашlег, іт іѕ весацѕе тнеч тніпк ѕагdіпеѕ шіll ве тнгошп іпто тне ѕеа   
+    $ cyrconv When the seagulls follow the trawler, it is because they think sardines will be thrown into the sea.
+    Шнеп тне ѕеаgцllѕ fоllош тне тгашlег, іт іѕ весацѕе тнеч тніпк ѕагdіпеѕ шіll ве тнгошп іпто тне ѕеа.   
 ```
 
 ### Счсопѵ.flех
 
 Тне flех ортіопѕ аllошѕ то lоаd сцѕтом тгапѕlатіоп fіlеѕ.
 
-> cyconv flex {table_file} sentence
+> cyconv flex table_file sentence
+
+Example:
 
 ```bash
-    $ cyrconv flex {rot-13.flex} When the seagulls follow the trawler, it is because they think sardines will be thrown into the 
+    $ cyrconv flex rot-13.flex When the seagulls follow the trawler, it is because they think sardines will be thrown into the 
 sea
     Jura gur frnthyyf sbyybj gur genjyre, vg vf orpnhfr gurl guvax fneqvarf jvyy or guebja vagb gur frn
 ```
