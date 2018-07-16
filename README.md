@@ -58,3 +58,7 @@ fіlе. Тне снагастегs шоп'т ве сопѕіdегеd іп тне
     $ cyrconv $(cyrconv flex 1337-lite.flex "Hello my friend. Nastrowje.")
     Н3ll0 мч fг13п). П4ѕт3г0шј3
 ```
+
+### Іf тне Ѕоѵіет Цпіоп наd шоп тне Соld Шаг 
+
+Ѕее fіlе "гцѕѕіап.соdе" 
