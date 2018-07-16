@@ -1,15 +1,9 @@
-use std::env::args;
 use std::fs::{File};
-use std::io::{Read};
-use std::io::BufReader;
-use std::io::BufRead;
+use std::io::{BufRead, BufReader};
 
 pub fn load_table(path: &str) -> Result<(String, String), &str> {
-    let mut buf = String::new();
-    let mut res: (String, String) = (String::new(), String::new());
-
     match File::open(&path) {
-        Ok(mut file) => { 
+        Ok(file) => { 
             let reader = BufReader::new(&file);
             let mut lines = reader.lines();
             Ok ( ( lines.next().unwrap().unwrap(), lines.next().unwrap().unwrap() ) )
@@ -20,7 +14,7 @@ pub fn load_table(path: &str) -> Result<(String, String), &str> {
 
 fn input(start: usize, words: &Vec<String>) -> String {
     let mut input: String = String::new();
-    for (i, arg) in words.iter().enumerate() {
+    for (i, _arg) in words.iter().enumerate() {
         if i > start {
             input.push_str(&words[i]);
             input.push(' ');
@@ -29,11 +23,10 @@ fn input(start: usize, words: &Vec<String>) -> String {
     input
 }
 
-
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
-    let mut start = 0;
+    let mut start = 0;    
     
+    let args: Vec<String> = std::env::args().collect();
     let table = if args[1].eq("flex") {
         start = 2;
         load_table(&args[2])
