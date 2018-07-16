@@ -18,10 +18,6 @@ pub fn load_table(path: &str) -> Result<(String, String), &str> {
     }
 }
 
-fn conv<'a>(input: &str, tt: (String, String) ) -> &'a str {
-    "dd"
-}
-
 fn input(start: usize, words: &Vec<String>) -> String {
     let mut input: String = String::new();
     for (i, arg) in words.iter().enumerate() {
