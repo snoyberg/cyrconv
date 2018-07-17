@@ -11,29 +11,36 @@ fn input(words: &[String]) -> String {
     input
 }
 
-fn output(input: String, table: (String, String) ) -> String {
-    let hm: HashMap<char, char> =
-        table.0.chars()
-        .zip(table.1.chars())
-        .collect()
-        ;
-    input.chars().map(|c| hm.get(&c).unwrap_or(&c).clone()).collect()
+struct Mapper(HashMap<char, char>);
+
+impl Mapper {
+    fn new(x: &str, y: &str) -> Self {
+        Mapper(x.chars().zip(y.chars()).collect())
+    }
+
+    fn map(&self, c: char) -> char {
+        self.0.get(&c).unwrap_or(&c).clone()
+    }
+
+    fn default() -> Self {
+        Self::new
+            ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>^",
+             "ДВСDЁҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdёfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>ˇ"
+            )
+    }
 }
 
-fn default() -> (String, String) {
-    (
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>^".to_string(),
-        "ДВСDЁҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdёfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>ˇ".to_string()
-    )
+fn output(input: String, mapper: Mapper) -> String {
+    input.chars().map(|c| mapper.map(c)).collect()
 }
 
-fn load_table(filepath: String)-> Result<(String, String), Box<std::error::Error>> {
+fn load_mapper(filepath: String)-> Result<Mapper, Box<std::error::Error>> {
     let file = File::open(&filepath)?;
     let reader = BufReader::new(&file);
     let mut lines = reader.lines();
     let line1 = pop_line(&mut lines)?;
     let line2 = pop_line(&mut lines)?;
-    Ok((line1, line2))
+    Ok(Mapper::new(&line1, &line2))
 }
 
 fn pop_line<I>(lines: &mut I) -> Result<String, String>
@@ -90,9 +97,9 @@ fn parse_args<I>(mut iter: I) -> Result<Args, &'static str>
 
 fn main() -> Result<(), Box<std::error::Error>> {
     let args = parse_args(std::env::args())?;
-    let table = match args.flex_file {
-        None => default(),
-        Some(flex_file) => load_table(flex_file)?,
+    let mapper = match args.flex_file {
+        None => Mapper::default(),
+        Some(flex_file) => load_mapper(flex_file)?,
     };
 
     let input =
@@ -102,6 +109,6 @@ fn main() -> Result<(), Box<std::error::Error>> {
             input(&args.words)
         }
     ;
-    println!("{}", output(input, table));
+    println!("{}", output(input, mapper));
     Ok(())
 }
