@@ -11,9 +11,9 @@ fn load(path: &str) -> Result<File, &str> {
 fn input(start: usize, words: &Vec<String>) -> String {
     let mut input: String = String::new();
     for (i, _arg) in words.iter().enumerate() {
-        if i > start {
-            input.push_str(&words[i]);
-            input.push(' ');
+        match i > start {
+            true => { input.push_str(&words[i]); input.push(' '); }
+            false => {}
         }
     }
     input
@@ -24,8 +24,10 @@ fn output(input: String, table: (usize, String, String) ) -> String {
     let mut output: String = String::new();
     for c in input.chars() {
         for (i, cl) in table.1.chars().enumerate() {
-             if c.eq(&cl) { output.push(tvec[i]); }
-             else { }
+             match c.eq(&cl) {
+                 true => { output.push(tvec[i]); },
+                 false => {}
+             }
         }
     }
     output
