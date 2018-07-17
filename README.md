@@ -19,7 +19,7 @@ There are currently six ways to use the program, as shown in the examples.
     $ cyrconv flex greek.flex "Hello Friends. How are you?"
     $ cyrconv flex greek.flex Hello my Friends. How are you?
 ```
-### ' and "
+### ' апd "
 
 Іf чоц шапт то мар а ѕтгіпg тнат соптаіпѕ ' ог " чоц наѵе то еѕсаре тне снагастег ог ѕцггоцпd тне ѕтгіпg отнег опе, тнат'ѕ пот іп тне ѕтгіпg.
 
