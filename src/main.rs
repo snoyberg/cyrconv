@@ -23,25 +23,31 @@ fn input(start: usize, words: &Vec<String>) -> String {
     input
 }
 
-fn main() {
-    let mut start = 0;    
-    
-    let args: Vec<String> = std::env::args().collect();
-    let table = if args[1].eq("flex") {
-        start = 2;
-        load_table(&args[2])
+fn table(args: &Vec<String>) -> Option<(usize, String, String)> {
+    if args[1].eq("flex") {
+        let table = load_table(&args[2]).unwrap();
+        Some ( (2, table.0, table.1) )
     } else {
-        Ok (( 
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string(),
-            "АВСDЕҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdеfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string()
-        ))
-    }.unwrap();
-    let input = input(start, &args);
+        Some ( 
+            (
+                0, 
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string(),
+                "АВСDЕҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdеfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string()
+            )
+        )
+    }
+}
 
-    let tvec: Vec<_> = table.1.chars().collect();
+fn main() {
+    let args: Vec<String> = std::env::args().collect();
+   
+    let table = table(&args).unwrap();
+    let input = input(table.0, &args);
+
+    let tvec: Vec<_> = table.2.chars().collect();
     let mut output: String = String::new();
     for c in input.chars() {
-        for (i, cl) in table.0.chars().enumerate() {
+        for (i, cl) in table.1.chars().enumerate() {
              if c.eq(&cl) { output.push(tvec[i]); }
              else { }
         }
