@@ -1,5 +1,6 @@
 use std::fs::{File};
 use std::io::{self, BufRead, BufReader, Read};
+use std::collections::HashMap;
 
 fn load(path: &str) -> Result<File, &str> {
     match File::open(path) {
@@ -18,17 +19,12 @@ fn input(words: &[String]) -> String {
 }
 
 fn output(input: String, table: (String, String) ) -> String {
-    let tvec: Vec<_> = table.1.chars().collect();
-    let mut output: String = String::new();
-    for c in input.chars() {
-        for (i, cl) in table.0.chars().enumerate() {
-            match c.eq(&cl) {
-                true => { output.push(tvec[i]); },
-                false => {}
-            }
-        }
-    }
-    output
+    let hm: HashMap<char, char> =
+        table.0.chars()
+        .zip(table.1.chars())
+        .collect()
+        ;
+    input.chars().map(|c| hm.get(&c).unwrap_or(&c).clone()).collect()
 }
 
 fn default() -> (String, String) {
