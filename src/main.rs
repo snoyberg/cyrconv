@@ -56,13 +56,13 @@ fn table(args: &Vec<String>) -> (usize, String, String) {
     } else{ default() }
 }
 
-fn stdin() -> Option<String> {
+fn stdin() -> String {
     let mut buffer = String::new();
     let stdin = io::stdin();
     let mut handle = stdin.lock();
 
     handle.read_to_string(&mut buffer);
-    Some(buffer)
+    buffer
 }
 
 fn main() -> std::io::Result<()> {
@@ -70,10 +70,10 @@ fn main() -> std::io::Result<()> {
     let table = table(&args);
     let out = match args.len() {
         1 => { // input from stdin w/o option
-            output(stdin().unwrap(), table)
+            output(stdin(), table)
         },
         3 => { // input from stdin with option
-            if args[1].eq("flex") {  output(stdin().unwrap(), table) }
+            if args[1].eq("flex") {  output(stdin(), table) }
             else {
                 let input = input(table.0, &args);
                 output(input, table)
