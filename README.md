@@ -1,8 +1,37 @@
 # СЧЯСОПЏ.ҒLЕХ
  
-Счсопѵ.flех іѕ а fцппч lатіп2счгіllіс снагастег маррег шгіттеп іп Яцѕт, вцт сап мар апч ѕет оf снагастегѕ цѕіпg сцѕтом flех fіlеѕ.
+Счсопѵ.flех іѕ а fцппч lатіп2счгіllіс снагастег маррег. Вч dеfацlт іт марѕ lатіп снагастегѕ оf а gіѵеп техт то Счгіllіс (Lоок-Аlіке) соцптеграгтѕ, yвцт сап мар апч ѕет оf снагастегѕ цѕіпg сцѕтом flех fіlеѕ.
 
 ## Цѕаgе
+
+### Gепегаl
+
+The program allows you to pipe a string or to pass it as a single or multiple arguments. If you want to use the flex option you have to pass them at first argument.
+There are currently six ways to use the program, as shown in the examples.
+
+Ехамрlе:
+
+```bash
+    $ echo "Hello Friend!" | cyrconv
+    $ echo "Hello Friends!" | cyrconv flex 1337-lite.flex
+    $ cyrconv "Hello Friend!"
+    $ cyrconv Hello my many Friends.
+    $ cyrconv flex greek.flex "Hello Friends. How are you?"
+    $ cyrconv flex greek.flex Hello my Friends. How are you?
+```
+### ' and "
+
+Іf чоц шапт то мар а ѕтгіпg тнат соптаіпѕ ' ог " чоц наѵе то еѕсаре тне снагастег ог ѕцггоцпd тне ѕтгіпg отнег опе, тнат'ѕ пот іп тне ѕтгіпg.
+
+Ехамрlеѕ:
+
+```bash
+    $ echo "What's up" | cyrconv
+    $ echo "That's pretty \"cheap\"." | cyrconv
+    $ echo '"cheap" is what this is!' | cyrconv
+    $ echo "If you want to map a string that contains \' or \" you have to escape the character \
+    or surround the string other one, that\'s not in the string." | cyrconv
+```
 
 ### Счгсопѵ.dеfацlт
 
@@ -12,7 +41,7 @@
 
 > cyrconv sentence
 
-Example:
+Ехамрlе:
 
 ```bash
     $ cyrconv When the seagulls follow the trawler, it is because they think sardines will be thrown into the sea.
@@ -25,7 +54,7 @@ Example:
 
 > cyrconv flex table_file sentence
 
-Example:
+Ехамрlе:
 
 ```bash
     $ cyrconv flex rot-13.flex When the seagulls follow the trawler, it is because they think sardines will be thrown into the 
