@@ -33,25 +33,21 @@ fn output(input: String, table: (usize, String, String) ) -> String {
     output
 }
 
-fn table(args: &Vec<String>) -> Option<(usize, String, String)> {
+fn table(args: &Vec<String>) -> (usize, String, String) {
     if args[1].eq("flex") {
         let file = load(&args[2]).unwrap();
         let reader = BufReader::new(&file);
         let mut lines = reader.lines();
-        Some (
-            (
-                2,
-                lines.next().unwrap().unwrap(),
-                lines.next().unwrap().unwrap()
-            )
+        (
+            2,
+            lines.next().unwrap().unwrap(),
+            lines.next().unwrap().unwrap()
         )
     } else {
-        Some ( 
-            (
-                0, 
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string(),
-                "АВСDЕҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdеfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string()
-            )
+        (
+            0, 
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string(),
+            "АВСDЕҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdеfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string()
         )
     }
 }
@@ -69,21 +65,21 @@ fn main() -> std::io::Result<()> {
     let args: Vec<String> = std::env::args().collect();
     let out = match args.len() {
         1 => { // input from stdin w/o option
-            let table = table(&vec![String::new(),String::new()]).unwrap();
+            let table = table(&vec![String::new(),String::new()]);
             output(stdin().unwrap(), table)
         },
         3 => { // input from stdin with option
             if args[1].eq("flex") {
-                let table = table(&args).unwrap();
+                let table = table(&args);
                 output(stdin().unwrap(), table)
             } else {
-                let table = table(&args).unwrap();
+                let table = table(&args);
                 let input = input(table.0, &args);
                 output(input, table)       
             }
         },
         _ => { // input from args
-            let table = table(&args).unwrap();
+            let table = table(&args);
             let input = input(table.0, &args);
             output(input, table)
         }
