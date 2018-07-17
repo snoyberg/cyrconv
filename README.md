@@ -84,6 +84,13 @@ fіlе. Тне снагастегs шоп'т ве сопѕіdегеd іп тне
 Чоц сап аlѕо сомвіпе lеет-lіте шітн Счгіllіс 
 
 ```bash
+    $ cyrconv flex 1337-lite.flex Circumflex | cyrconv
+    Н3ll0 мч fг13п). П4ѕтг0шј3.
+```
+
+or 
+
+```bash
     $ cyrconv $(cyrconv flex 1337-lite.flex "Hello my friend. Nastrowje.")
     Н3ll0 мч fг13п). П4ѕт3г0шј3
 ```
