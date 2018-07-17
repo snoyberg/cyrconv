@@ -1,12 +1,10 @@
 use std::fs::{File};
 use std::io::{BufRead, BufReader};
 
-fn load_table(path: &str) -> Result<(String, String), &str> {
+fn load_table(path: &str) -> Result<File, &str> {
     match File::open(&path) {
         Ok(file) => { 
-            let reader = BufReader::new(&file);
-            let mut lines = reader.lines();
-            Ok ( ( lines.next().unwrap().unwrap(), lines.next().unwrap().unwrap() ) )
+           Ok(file)
         }, 
         Err(_e) =>{ Err("load error. file not found.") }
     }
@@ -25,8 +23,16 @@ fn input(start: usize, words: &Vec<String>) -> String {
 
 fn table(args: &Vec<String>) -> Option<(usize, String, String)> {
     if args[1].eq("flex") {
-        let table = load_table(&args[2]).unwrap();
-        Some ( (2, table.0, table.1) )
+        let file = load_table(&args[2]).unwrap();
+        let reader = BufReader::new(&file);
+        let mut lines = reader.lines();
+        Some (
+            (
+                2,
+                lines.next().unwrap().unwrap(),
+                lines.next().unwrap().unwrap()
+            )
+        )
     } else {
         Some ( 
             (
