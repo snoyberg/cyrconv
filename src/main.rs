@@ -33,23 +33,27 @@ fn output(input: String, table: (usize, String, String) ) -> String {
     output
 }
 
+fn default() -> (usize, String, String) {
+    (
+        0, 
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string(),
+        "АВСDЕҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdеfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string()
+    )
+}
+
 fn table(args: &Vec<String>) -> (usize, String, String) {
-    if args[1].eq("flex") {
-        let file = load(&args[2]).unwrap();
-        let reader = BufReader::new(&file);
-        let mut lines = reader.lines();
-        (
-            2,
-            lines.next().unwrap().unwrap(),
-            lines.next().unwrap().unwrap()
-        )
-    } else {
-        (
-            0, 
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string(),
-            "АВСDЕҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdеfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>".to_string()
-        )
-    }
+    if args.len() > 1 {
+        if args[1].eq("flex") {
+            let file = load(&args[2]).unwrap();
+            let reader = BufReader::new(&file);
+            let mut lines = reader.lines();
+            (
+                2,
+                lines.next().unwrap().unwrap(),
+                lines.next().unwrap().unwrap()
+            )
+        } else { default() }
+    } else{ default() }
 }
 
 fn stdin() -> Option<String> {
@@ -63,23 +67,19 @@ fn stdin() -> Option<String> {
 
 fn main() -> std::io::Result<()> {
     let args: Vec<String> = std::env::args().collect();
+    let table = table(&args);
     let out = match args.len() {
         1 => { // input from stdin w/o option
-            let table = table(&vec![String::new(),String::new()]);
             output(stdin().unwrap(), table)
         },
         3 => { // input from stdin with option
-            if args[1].eq("flex") {
-                let table = table(&args);
-                output(stdin().unwrap(), table)
-            } else {
-                let table = table(&args);
+            if args[1].eq("flex") {  output(stdin().unwrap(), table) }
+            else {
                 let input = input(table.0, &args);
                 output(input, table)       
             }
         },
         _ => { // input from args
-            let table = table(&args);
             let input = input(table.0, &args);
             output(input, table)
         }
