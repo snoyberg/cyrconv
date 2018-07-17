@@ -3,9 +3,7 @@ use std::io::{BufRead, BufReader};
 
 fn load(path: &str) -> Result<File, &str> {
     match File::open(&path) {
-        Ok(file) => { 
-           Ok(file)
-        }, 
+        Ok(file) => { Ok(file) }, 
         Err(_e) =>{ Err("load error. file not found.") }
     }
 }
