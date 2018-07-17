@@ -1,7 +1,7 @@
 use std::fs::{File};
 use std::io::{BufRead, BufReader};
 
-pub fn load_table(path: &str) -> Result<(String, String), &str> {
+fn load_table(path: &str) -> Result<(String, String), &str> {
     match File::open(&path) {
         Ok(file) => { 
             let reader = BufReader::new(&file);
