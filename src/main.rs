@@ -17,11 +17,11 @@ fn input(words: &[String]) -> String {
     input
 }
 
-fn output(input: String, table: (usize, String, String) ) -> String {
-    let tvec: Vec<_> = table.2.chars().collect();
+fn output(input: String, table: (String, String) ) -> String {
+    let tvec: Vec<_> = table.1.chars().collect();
     let mut output: String = String::new();
     for c in input.chars() {
-        for (i, cl) in table.1.chars().enumerate() {
+        for (i, cl) in table.0.chars().enumerate() {
             match c.eq(&cl) {
                 true => { output.push(tvec[i]); },
                 false => {}
@@ -31,25 +31,20 @@ fn output(input: String, table: (usize, String, String) ) -> String {
     output
 }
 
-fn default() -> (usize, String, String) {
+fn default() -> (String, String) {
     (
-        1,
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>^".to_string(),
         "ДВСDЁҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdёfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>ˇ".to_string()
     )
 }
 
-fn table(args: &Vec<String>) -> Result<(usize, String, String), String> {
-    if args.len() > 1 && args[1] == "flex" {
-        let file = load(&args[2])?;
-        let reader = BufReader::new(&file);
-        let mut lines = reader.lines();
-        let line1 = pop_line(&mut lines)?;
-        let line2 = pop_line(&mut lines)?;
-        Ok((2, line1, line2))
-    } else {
-        Ok(default())
-    }
+fn load_table(filepath: String)-> Result<(String, String), String> {
+    let file = load(&filepath)?;
+    let reader = BufReader::new(&file);
+    let mut lines = reader.lines();
+    let line1 = pop_line(&mut lines)?;
+    let line2 = pop_line(&mut lines)?;
+    Ok((line1, line2))
 }
 
 fn pop_line<I>(lines: &mut I) -> Result<String, String>
@@ -70,25 +65,54 @@ fn stdin() -> std::io::Result<String> {
     Ok(buffer)
 }
 
-fn main() -> Result<(), Box<std::error::Error>> {
-    let args: Vec<String> = std::env::args().collect();
-    let table = table(&args)?;
-    let out = match args.len() {
-        1 => { // input from stdin w/o option
-            output(stdin()?, table)
-        },
-        3 => { // input from stdin with option
-            if args[1].eq("flex") {  output(stdin()?, table) }
-            else {
-                let input = input(&args[table.0 ..]);
-                output(input, table)
+struct Args {
+    flex_file: Option<String>,
+    words: Vec<String>,
+}
+
+fn parse_args<I>(mut iter: I) -> Result<Args, &'static str>
+    where I: Iterator<Item=String> {
+    iter.next(); // drop the program name
+    match iter.next() {
+        None => Ok(Args {
+            flex_file: None,
+            words: vec![],
+        }),
+        Some(first) => {
+            if first == "flex" {
+                match iter.next() {
+                    None => Err("flex requires one argument"),
+                    Some(file) => {
+                        Ok(Args {
+                            flex_file: Some(file),
+                            words: iter.collect(),
+                        })
+                    }
+                }
+            } else {
+                Ok(Args {
+                    flex_file: None,
+                    words: std::iter::once(first).chain(iter).collect(),
+                })
             }
-        },
-        _ => { // input from args
-            let input = input(&args[table.0..]);
-            output(input, table)
         }
+    }
+}
+
+fn main() -> Result<(), Box<std::error::Error>> {
+    let args = parse_args(std::env::args())?;
+    let table = match args.flex_file {
+        None => default(),
+        Some(flex_file) => load_table(flex_file)?,
     };
-    println!("{}", out);
+
+    let input =
+        if args.words.len() == 0 {
+            stdin()?
+        } else {
+            input(&args.words)
+        }
+    ;
+    println!("{}", output(input, table));
     Ok(())
 }
