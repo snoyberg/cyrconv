@@ -1,5 +1,5 @@
 use std::fs::{File};
-use std::io::{BufRead, BufReader};
+use std::io::{self, BufRead, BufReader, Read};
 
 fn load(path: &str) -> Result<File, &str> {
     match File::open(&path) {
@@ -24,15 +24,14 @@ fn output(input: String, table: (usize, String, String) ) -> String {
     let mut output: String = String::new();
     for c in input.chars() {
         for (i, cl) in table.1.chars().enumerate() {
-             match c.eq(&cl) {
-                 true => { output.push(tvec[i]); },
-                 false => {}
-             }
+            match c.eq(&cl) {
+                true => { output.push(tvec[i]); },
+                false => {}
+            }
         }
     }
     output
 }
-
 
 fn table(args: &Vec<String>) -> Option<(usize, String, String)> {
     if args[1].eq("flex") {
@@ -57,11 +56,38 @@ fn table(args: &Vec<String>) -> Option<(usize, String, String)> {
     }
 }
 
-fn main() {
-    let args: Vec<String> = std::env::args().collect();
-   
-    let table = table(&args).unwrap();
-    let input = input(table.0, &args);
+fn stdin() -> Option<String> {
+    let mut buffer = String::new();
+    let stdin = io::stdin();
+    let mut handle = stdin.lock();
 
-    println!("{}", output(input, table));
+    handle.read_to_string(&mut buffer);
+    Some(buffer)
+}
+
+fn main() -> std::io::Result<()> {
+    let args: Vec<String> = std::env::args().collect();
+    let out = match args.len() {
+        1 => { // input from stdin w/o option
+            let table = table(&vec![String::new(),String::new()]).unwrap();
+            output(stdin().unwrap(), table)
+        },
+        3 => { // input from stdin with option
+            if args[1].eq("flex") {
+                let table = table(&args).unwrap();
+                output(stdin().unwrap(), table)
+            } else {
+                let table = table(&args).unwrap();
+                let input = input(table.0, &args);
+                output(input, table)       
+            }
+        },
+        _ => { // input from args
+            let table = table(&args).unwrap();
+            let input = input(table.0, &args);
+            output(input, table)
+        }
+    };
+    println!("{}", out);
+    Ok(())
 }
