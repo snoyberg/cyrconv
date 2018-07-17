@@ -3,7 +3,7 @@ use std::io::{self, BufRead, BufReader, Read};
 
 fn load(path: &str) -> Result<File, &str> {
     match File::open(&path) {
-        Ok(file) => { Ok(file) }, 
+        Ok(file) => { Ok(file) },
         Err(_e) =>{ Err("load error. file not found.") }
     }
 }
@@ -35,7 +35,7 @@ fn output(input: String, table: (usize, String, String) ) -> String {
 
 fn default() -> (usize, String, String) {
     (
-        0, 
+        0,
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>^".to_string(),
         "ДВСDЁҒGНІЈКLМПОРQЯЅТЦЏШХЧZавсdёfgніјкlмпорqгѕтцѵшхчz 1234567890!\"§$%&/()=?,.-;:_'{[]}<>ˇ".to_string()
     )
@@ -76,7 +76,7 @@ fn main() -> std::io::Result<()> {
             if args[1].eq("flex") {  output(stdin().unwrap(), table) }
             else {
                 let input = input(table.0, &args);
-                output(input, table)       
+                output(input, table)
             }
         },
         _ => { // input from args
