@@ -1,7 +1,7 @@
 use std::fs::{File};
 use std::io::{BufRead, BufReader};
 
-fn load_table(path: &str) -> Result<File, &str> {
+fn load(path: &str) -> Result<File, &str> {
     match File::open(&path) {
         Ok(file) => { 
            Ok(file)
@@ -23,7 +23,7 @@ fn input(start: usize, words: &Vec<String>) -> String {
 
 fn table(args: &Vec<String>) -> Option<(usize, String, String)> {
     if args[1].eq("flex") {
-        let file = load_table(&args[2]).unwrap();
+        let file = load(&args[2]).unwrap();
         let reader = BufReader::new(&file);
         let mut lines = reader.lines();
         Some (
