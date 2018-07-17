@@ -2,13 +2,6 @@ use std::fs::{File};
 use std::io::{self, BufRead, BufReader, Read};
 use std::collections::HashMap;
 
-fn load(path: &str) -> Result<File, &str> {
-    match File::open(path) {
-        Ok(file) => { Ok(file) },
-        Err(_e) =>{ Err("load error. file not found.") }
-    }
-}
-
 fn input(words: &[String]) -> String {
     let mut input: String = String::new();
     for word in words {
@@ -34,8 +27,8 @@ fn default() -> (String, String) {
     )
 }
 
-fn load_table(filepath: String)-> Result<(String, String), String> {
-    let file = load(&filepath)?;
+fn load_table(filepath: String)-> Result<(String, String), Box<std::error::Error>> {
+    let file = File::open(&filepath)?;
     let reader = BufReader::new(&file);
     let mut lines = reader.lines();
     let line1 = pop_line(&mut lines)?;
