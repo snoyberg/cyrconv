@@ -19,7 +19,7 @@ impl Mapper {
     }
 
     fn map(&self, c: char) -> char {
-        self.0.get(&c).unwrap_or(&c).clone()
+        *self.0.get(&c).unwrap_or(&c)
     }
 
     fn default() -> Self {
@@ -30,11 +30,11 @@ impl Mapper {
     }
 }
 
-fn output(input: String, mapper: Mapper) -> String {
+fn output(input: &str, mapper: &Mapper) -> String {
     input.chars().map(|c| mapper.map(c)).collect()
 }
 
-fn load_mapper(filepath: String)-> Result<Mapper, Box<std::error::Error>> {
+fn load_mapper(filepath: &str)-> Result<Mapper, Box<std::error::Error>> {
     let file = File::open(&filepath)?;
     let reader = BufReader::new(&file);
     let mut lines = reader.lines();
@@ -99,16 +99,16 @@ fn main() -> Result<(), Box<std::error::Error>> {
     let args = parse_args(std::env::args())?;
     let mapper = match args.flex_file {
         None => Mapper::default(),
-        Some(flex_file) => load_mapper(flex_file)?,
+        Some(flex_file) => load_mapper(&flex_file)?,
     };
 
     let input =
-        if args.words.len() == 0 {
+        if args.words.is_empty() {
             stdin()?
         } else {
             input(&args.words)
         }
     ;
-    println!("{}", output(input, mapper));
+    println!("{}", output(&input, &mapper));
     Ok(())
 }
